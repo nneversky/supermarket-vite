@@ -1,21 +1,22 @@
 import "./CartElement.css";
 import { Paper, Image } from "@mantine/core";
+import { useDispatch } from "react-redux";
+import { clickStepperInCart } from "../../store/slices/itemsSlice";
 import Stepper from "../stepper";
 import type { CardItem } from "../../service/supermarketApp";
-import { useContext } from "react";
-import { StepperCartContext } from "../../state/context";
 
 interface CartElementInterface {
   value: CardItem;
 }
 
 const CartElement = ({ value }: CartElementInterface) => {
-  const { setStepperCart } = useContext(StepperCartContext);
   const { image, name, price, id, count } = value;
   const [title, weight] = name.split(" - ");
+    const dispatch = useDispatch();
+
 
   const handleClick = (id: number, action: "plus" | "minus") => {
-    setStepperCart({ id: id, action: action });
+    dispatch(clickStepperInCart({id, act : action}))
   };
 
   return (

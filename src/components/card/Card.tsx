@@ -2,18 +2,25 @@ import "./Card.css";
 import Stepper from "../../components/stepper";
 import Button from "../../ui/button";
 import type { CardItem } from "../../service/supermarketApp";
-import { useContext } from "react";
-import { CartContext, StepperContext } from "../../state/context";
 import { Image } from "antd";
 import { Paper, Loader } from "@mantine/core";
+import { useDispatch } from "react-redux";
+import { addCart, clickStepper } from "../../store/slices/itemsSlice";
 
 type CardDataProps = {
   data: CardItem;
 };
 
 const Card = ({ data }: CardDataProps) => {
-  const actionToCart = useContext(CartContext);
-  const setStepperCount = useContext(StepperContext) ?? (() => {});
+  const dispatch = useDispatch();
+
+  const handleClickStepper = (id: number, action: "plus" | "minus") => {
+    dispatch(clickStepper({ id, act: action }));
+  };
+
+  const handleAddCart = (id: number) => {
+    dispatch(addCart({ id }));
+  };
 
   const { image, name, price, count, id } = data;
   const [nameItem, weightItem] = name.split(" - ");
@@ -39,7 +46,7 @@ const Card = ({ data }: CardDataProps) => {
           <span className="text__weight">{weightItem}</span>
         </div>
         <div className="stepper">
-          <Stepper id={id} count={count} onClick={setStepperCount} />
+          <Stepper id={id} count={count} onClick={handleClickStepper} />
         </div>
       </div>
 
@@ -51,7 +58,7 @@ const Card = ({ data }: CardDataProps) => {
             colorButton="#3B944E"
             id={id}
             colorCard="#3B944E"
-            onClick={(id?: number) => id !== undefined && actionToCart(id)}
+            onClick={(id?: number) => id !== undefined && handleAddCart(id)}
           >
             Add to cart
           </Button>

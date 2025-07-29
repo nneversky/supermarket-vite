@@ -1,15 +1,17 @@
 import "./Cart.css";
 import CartElement from "../../components/cartElement";
-import { PopupContext } from "../../state/context";
-import { useContext, useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { useState, useEffect, useRef } from "react";
 import { Image } from "@mantine/core";
 import emptyCart from "../../assets/image/emptyCart.svg";
+import type { RootState } from "../../store";
 
 const Cart = () => {
-  const { cart } = useContext(PopupContext);
   const [total, setTotal] = useState(0);
   const [showImgemptyCart, setShowImgemptyCart] = useState(true);
   const popupRef = useRef<HTMLDivElement>(null);
+
+  const cart = useSelector((state: RootState) => state.items.cartItems);
 
   useEffect(() => {
     if (cart.length !== 0) setShowImgemptyCart(false);

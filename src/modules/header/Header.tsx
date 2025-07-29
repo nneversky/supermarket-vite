@@ -1,29 +1,31 @@
 import Button from "../../ui/button";
 import ShopTitle from "../../ui/shopTitle";
 import "./Header.css";
-import { CountItemsContext, ShowPopupContext } from "../../state/context";
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { clickModal } from "../../store/slices/itemsSlice";
+import type { RootState } from "../../store";
 
 const Header = () => {
-  const { count } = useContext(CountItemsContext);
-  const { showPopup, setShowPopup } = useContext(ShowPopupContext);
+  const showModal = useSelector((state : RootState) => state.items.showModal);
+  const countItemsInCart = useSelector((state : RootState) => state.items.countItemsInCart);
+  const dispatch = useDispatch();
 
   const handleClick = () => {
-    setShowPopup(!showPopup);
+    dispatch(clickModal());
   };
 
   return (
     <section className="header">
       <div
-        onClick={() => setShowPopup(false)}
-        className={`header__background ${showPopup ? "background--active" : "background--disable"}`}
+        onClick={() => handleClick()}
+        className={`header__background ${showModal ? "background--active" : "background--disable"}`}
       ></div>
       <div onClick={() => window.location.reload()}>
         <ShopTitle />
       </div>
 
       <div
-        className={`header__button ${showPopup ? "cart--open" : "cart--close"}`}
+        className={`header__button ${showModal ? "cart--open" : "cart--close"}`}
       >
         <Button
           variant="filled"
@@ -31,7 +33,9 @@ const Header = () => {
           colorCard="#FFFFFF"
           onClick={() => handleClick()}
         >
-          {count > 0 ? <span className="count-items">{count}</span> : null}
+          {countItemsInCart > 0 ? (
+            <span className="count-items">{countItemsInCart}</span>
+          ) : null}
           Cart
         </Button>
       </div>
